@@ -1,0 +1,65 @@
+#include <stdio.h>
+
+int main() {
+    int n, i, j;
+
+    // Get the size of the square matrices from the user
+    printf("Enter the size of the square matrices: ");
+    scanf("%d", &n);
+
+    // Check if the size is even (required for Strassen's algorithm)
+    if (n & 1) {
+        printf("Matrix size must be even for Strassen's algorithm.\n");
+        return 1;
+    }
+
+    // Declare matrices to store the input and output (n x n size)
+    int x[n][n];
+    int y[n][n];
+    int z[n][n];
+
+    // Get elements of the first matrix from the user
+    printf("Enter the elements of the first matrix:\n");
+    for (i = 0; i < n; i++) {
+        for (j = 0; j < n; j++) {
+            scanf("%d", &x[i][j]);
+        }
+    }
+
+    // Get elements of the second matrix from the user
+    printf("Enter the elements of the second matrix:\n");
+    for (i = 0; i < n; i++) {
+        for (j = 0; j < n; j++) {
+            scanf("%d", &y[i][j]);
+        }
+    }
+
+    // Temporary variables to hold intermediate calculations for Strassen's algorithm
+    int m1, m2, m3, m4, m5, m6, m7;
+
+    // Calculate sub-expressions used in Strassen's algorithm (refer to Strassen's formulas)
+    m1 = (x[0][0] + x[n-1][n-1]) * (y[0][0] + y[n-1][n-1]);
+    m2 = (x[n-1][0] + x[n-1][n-1]) * y[0][0];
+    m3 = x[0][0] * (y[0][n-1] - y[n-1][n-1]);
+    m4 = x[n-1][n-1] * (y[n-1][0] - y[0][0]);
+    m5 = (x[0][0] + x[0][n-1]) * y[n-1][n-1];
+    m6 = (x[n-1][0] - x[0][0]) * (y[0][0] + y[0][n-1]);
+    m7 = (x[0][n-1] - x[n-1][n-1]) * (y[n-1][0] + y[n-1][n-1]);
+
+    // Calculate elements of the resulting matrix (z) using Strassen's formulas
+    z[0][0] = m1 + m4 - m5 + m7;
+    z[0][n-1] = m3 + m5;
+    z[n-1][0] = m2 + m4;
+    z[n-1][n-1] = m1 - m2 + m3 + m6;
+
+    // Print the resulting product matrix
+    printf("\nProduct achieved using Strassen's algorithm:\n");
+    for (i = 0; i < n; i++) {
+        printf("\n");
+        for (j = 0; j < n; j++) {
+            printf("%d\t", z[i][j]);
+        }
+    }
+
+    return 0;
+}
